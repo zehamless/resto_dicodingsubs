@@ -8,7 +8,7 @@ class Restaurant {
     required this.name,
     required this.description,
     required this.city,
-    required this.address,
+    this.address,
     required this.pictureId,
     this.categories,
     this.menus,
@@ -20,7 +20,7 @@ class Restaurant {
   final String name;
   final String description;
   final String city;
-  final String address;
+  final String? address;
   final String pictureId;
   final List<Category>? categories;
   final Menus? menus;
@@ -33,16 +33,16 @@ class Restaurant {
       name: json["name"],
       description: json["description"],
       city: json["city"],
-      address: json["address"],
+      address: json["address"] ?? '',
       pictureId: json["pictureId"],
       categories: json["categories"] == null
-          ? []
+          ? null
           : List<Category>.from(
               json["categories"]!.map((x) => Category.fromJson(x))),
       menus: json["menus"] == null ? null : Menus.fromJson(json["menus"]),
       rating: json["rating"],
       customerReviews: json["customerReviews"] == null
-          ? []
+          ? null
           : List<CustomerReview>.from(
               json["customerReviews"]!.map((x) => CustomerReview.fromJson(x))),
     );

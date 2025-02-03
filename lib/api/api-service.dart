@@ -26,6 +26,7 @@ class ApiService {
     }
   }
 
+//TODO: image url to future
   String getImageUrl(String pictureId, ImageSize size) {
     final sizeStr = size.toString().split('.').last;
     return '$_imageUrl$sizeStr/$pictureId';
