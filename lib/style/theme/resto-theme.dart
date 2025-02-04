@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../typography/resto-text-typography.dart';
 
 class RestoTheme {
-
   static TextTheme get _textTheme {
     return TextTheme(
       displayLarge: RestoTextStyles.displayLarge,
@@ -23,6 +22,7 @@ class RestoTheme {
       labelSmall: RestoTextStyles.labelSmall,
     );
   }
+
   static AppBarTheme get _appBarTheme {
     return AppBarTheme(
       toolbarTextStyle: _textTheme.titleLarge,
@@ -34,6 +34,7 @@ class RestoTheme {
       ),
     );
   }
+
   static ThemeData get lightTheme {
     return ThemeData(
       colorSchemeSeed: RestoColors.blue.color,

@@ -4,6 +4,7 @@ import 'package:resto_dicodingsubs/provider/home/resto-list-provider.dart';
 import 'package:resto_dicodingsubs/screen/home/resto-card-widget.dart';
 import 'package:resto_dicodingsubs/screen/home/shimmer-list.dart';
 
+import '../../provider/style/theme-provider.dart';
 import '../../static/navigation-route.dart';
 import '../../static/resto-list-result-state.dart';
 
@@ -27,7 +28,21 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("List"),
+        title: Row(
+          children: const [
+            Icon(Icons.restaurant),
+            SizedBox(width: 8),
+            Text('RestoDicodingSubs'),
+          ],
+        ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.brightness_6),
+            onPressed: () {
+              context.read<ThemeProvider>().toggleTheme();
+            },
+          ),
+        ],
       ),
       body: Consumer<RestoListProvider>(builder: (context, value, child) {
         return switch (value.resultState) {
