@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:resto_dicodingsubs/api/api-service.dart';
 import 'package:resto_dicodingsubs/provider/detail/resto-detail-provider.dart';
 import 'package:resto_dicodingsubs/provider/home/resto-list-provider.dart';
+import 'package:resto_dicodingsubs/screen/detail/detail-screen.dart';
 import 'package:resto_dicodingsubs/screen/main-screen.dart';
 import 'package:resto_dicodingsubs/static/navigation-route.dart';
 import 'package:resto_dicodingsubs/style/theme/resto-theme.dart';
@@ -31,9 +32,9 @@ class MyApp extends StatelessWidget {
       initialRoute: NavigationRoute.mainRoute.name,
       routes: {
         NavigationRoute.mainRoute.name: (context) => const MainScreen(),
-        // NavigationRoute.detailRoute.name: (context) => const DetailScreen(
-        //       restoId: ModalRoute.of(context)?.settings.arguments as int,
-        //     ),
+        NavigationRoute.detailRoute.name: (context) => DetailScreen(
+              restoId: ModalRoute.of(context)?.settings.arguments as String,
+            ),
       },
     );
   }

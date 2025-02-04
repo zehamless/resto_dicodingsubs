@@ -1,5 +1,7 @@
 import 'dart:convert';
+
 import 'package:http/http.dart' as http;
+
 import '../model/resto-response.dart';
 
 enum ImageSize { small, medium, large }
@@ -26,8 +28,7 @@ class ApiService {
     }
   }
 
-//TODO: image url to future
-  String getImageUrl(String pictureId, ImageSize size) {
+  Future<String> getImageUrl(String pictureId, ImageSize size) async {
     final sizeStr = size.toString().split('.').last;
     return '$_imageUrl$sizeStr/$pictureId';
   }

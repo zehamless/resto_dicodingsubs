@@ -3,9 +3,10 @@ import 'package:provider/provider.dart';
 import 'package:resto_dicodingsubs/provider/detail/resto-detail-provider.dart';
 
 import '../../static/resto-detail-result-state.dart';
+import 'detail-screen-widget.dart';
 
 class DetailScreen extends StatefulWidget {
-  final int restoId;
+  final String restoId;
 
   const DetailScreen({super.key, required this.restoId});
 
@@ -14,6 +15,15 @@ class DetailScreen extends StatefulWidget {
 }
 
 class _DetailScreenState extends State<DetailScreen> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Future.microtask(() {
+      context.read<RestoDetailProvider>().fetchDetail(widget.restoId);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,11 +36,8 @@ class _DetailScreenState extends State<DetailScreen> {
               RestoDetailResultLoading() => const Center(
                   child: CircularProgressIndicator(),
                 ),
-              RestoDetailResultLoaded(data: var resto) => Column(
-                  children: [
-                    Text(resto.name),
-                    Text(resto.description),
-                  ],
+              RestoDetailResultLoaded(data: var resto) => DetailScreenWidget(
+                  restaurant: resto,
                 ),
               RestoDetailResultError(error: var message) => Center(
                   child: Text(message),

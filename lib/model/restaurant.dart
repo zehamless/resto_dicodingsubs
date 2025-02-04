@@ -62,23 +62,3 @@ class Restaurant {
       };
 }
 
-final List<Restaurant> mockRestaurants = [
-  Restaurant(
-    id: '1',
-    name: 'Restaurant A',
-    description: 'A great place to eat.',
-    city: 'City A',
-    address: '123 Main St',
-    pictureId: 'pic1',
-    rating: 4.5,
-  ),
-  Restaurant(
-    id: '2',
-    name: 'Restaurant B',
-    description: 'A cozy place to dine.',
-    city: 'City B',
-    address: '456 Elm St',
-    pictureId: 'pic2',
-    rating: 4.0,
-  ),
-];

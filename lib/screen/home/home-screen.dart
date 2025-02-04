@@ -32,7 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: Consumer<RestoListProvider>(builder: (context, value, child) {
         return switch (value.resultState) {
           RestoListResultLoading() => ListView.builder(
-              itemCount: 6,
+              itemCount: 10,
               itemBuilder: (context, index) {
                 return ShimmerList();
               }),
@@ -41,7 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
               itemBuilder: (context, index) {
                 final resto = restoList[index];
                 return RestoCard(
-                  resto: resto,
+                  restaurant: resto,
                   onTap: () {
                     Navigator.pushNamed(
                       context,
