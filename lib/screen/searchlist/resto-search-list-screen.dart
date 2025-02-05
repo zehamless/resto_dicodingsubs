@@ -3,9 +3,9 @@ import 'package:provider/provider.dart';
 import 'package:resto_dicodingsubs/provider/searchlist/resto-search-list-provider.dart';
 import 'package:resto_dicodingsubs/screen/home/resto-card-widget.dart';
 
-import '../../provider/style/theme-provider.dart';
 import '../../static/navigation-route.dart';
 import '../../static/resto-list-result-state.dart';
+import '../../utils/theme-changer.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -41,20 +41,7 @@ class _SearchScreenState extends State<SearchScreen> {
             Text('RestoDicodingSubs'),
           ],
         ),
-        actions: [
-          Consumer<ThemeProvider>(
-            builder: (context, themeProvider, child) {
-              return IconButton(
-                icon: Icon(
-                  themeProvider.themeMode == ThemeMode.light
-                      ? Icons.dark_mode
-                      : Icons.light_mode,
-                ),
-                onPressed: themeProvider.toggleTheme,
-              );
-            },
-          )
-        ],
+        actions: [ThemeChanger()],
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(48.0),
           child: Padding(
@@ -71,14 +58,28 @@ class _SearchScreenState extends State<SearchScreen> {
                         borderSide: BorderSide.none,
                       ),
                       filled: true,
-                      fillColor: Colors.white,
-                      prefixIcon: const Icon(Icons.search),
+                      suffixIcon: IconButton(
+                        icon: const Icon(Icons.clear),
+                        onPressed: () {
+                          _searchController.clear();
+                        },
+                      ),
                     ),
                   ),
                 ),
-                IconButton(
-                  icon: const Icon(Icons.search),
-                  onPressed: _onSearchPressed,
+                const SizedBox(width: 8.0),
+                Ink(
+                  decoration: ShapeDecoration(
+                    color: Theme.of(context).colorScheme.secondaryContainer,
+                    shape: CircleBorder(),
+                  ),
+                  child: IconButton(
+                    icon: Icon(
+                      Icons.search,
+                      color: Theme.of(context).colorScheme.secondary,
+                    ),
+                    onPressed: _onSearchPressed,
+                  ),
                 ),
               ],
             ),

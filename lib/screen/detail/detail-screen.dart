@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:resto_dicodingsubs/provider/detail/resto-detail-provider.dart';
 import 'package:resto_dicodingsubs/screen/detail/widget/review-form.dart';
+import 'package:resto_dicodingsubs/utils/theme-changer.dart';
 
 import '../../static/resto-detail-result-state.dart';
 import 'detail-screen-widget.dart';
@@ -29,6 +30,9 @@ class _DetailScreenState extends State<DetailScreen> {
     return Scaffold(
         appBar: AppBar(
           title: Text('Detail Screen'),
+          actions: [
+            ThemeChanger(),
+          ],
         ),
         floatingActionButton: FloatingActionButton(
           tooltip: "Add Review",
@@ -40,9 +44,9 @@ class _DetailScreenState extends State<DetailScreen> {
               },
             );
           },
-          child: const Icon(Icons.arrow_back),
+          child: const Icon(Icons.reviews),
         ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
+        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         body: Consumer<RestoDetailProvider>(
           builder: (context, value, child) {
             return switch (value.resultState) {

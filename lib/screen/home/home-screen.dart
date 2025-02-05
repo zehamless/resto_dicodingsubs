@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:resto_dicodingsubs/provider/home/resto-list-provider.dart';
 import 'package:resto_dicodingsubs/screen/home/resto-card-widget.dart';
+import 'package:resto_dicodingsubs/utils/theme-changer.dart';
 
-import '../../provider/style/theme-provider.dart';
 import '../../static/navigation-route.dart';
 import '../../static/resto-list-result-state.dart';
 
@@ -35,18 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
         actions: [
-          Consumer<ThemeProvider>(
-            builder: (context, themeProvider, child) {
-              return IconButton(
-                icon: Icon(
-                  themeProvider.themeMode == ThemeMode.light
-                      ? Icons.dark_mode
-                      : Icons.light_mode,
-                ),
-                onPressed: themeProvider.toggleTheme,
-              );
-            },
-          ),
+          ThemeChanger(),
           IconButton(
             icon: const Icon(Icons.search),
             onPressed: () {
