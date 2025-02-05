@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:resto_dicodingsubs/api/api-service.dart';
 import 'package:resto_dicodingsubs/model/restaurant.dart';
-import 'package:shimmer/shimmer.dart';
 
 class RestoCard extends StatelessWidget {
   final Restaurant restaurant;
@@ -17,50 +16,13 @@ class RestoCard extends StatelessWidget {
       future: apiService.getImageUrl(restaurant.pictureId, ImageSize.small),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return _buildShimmerCard(context);
+          return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasData) {
           return _buildCard(context, snapshot.data as String);
         } else {
           return _buildErrorCard(context);
         }
       },
-    );
-  }
-
-  Widget _buildShimmerCard(BuildContext context) {
-    return Shimmer.fromColors(
-      baseColor: Colors.grey[300]!,
-      highlightColor: Colors.grey[100]!,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              width: 120,
-              height: 120,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(8),
-              ),
-            ),
-            const SizedBox(width: 8),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                      width: double.infinity, height: 20, color: Colors.white),
-                  const SizedBox(height: 8),
-                  Container(width: 100, height: 20, color: Colors.white),
-                  const SizedBox(height: 8),
-                  Container(width: 50, height: 20, color: Colors.white),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 

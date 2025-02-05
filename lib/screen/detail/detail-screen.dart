@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:resto_dicodingsubs/provider/detail/resto-detail-provider.dart';
+import 'package:resto_dicodingsubs/screen/detail/widget/review-form.dart';
 
 import '../../static/resto-detail-result-state.dart';
 import 'detail-screen-widget.dart';
 
 class DetailScreen extends StatefulWidget {
-  final String restoId;
+  final String restaurantId;
 
-  const DetailScreen({super.key, required this.restoId});
+  const DetailScreen({super.key, required this.restaurantId});
 
   @override
   State<DetailScreen> createState() => _DetailScreenState();
@@ -17,10 +18,9 @@ class DetailScreen extends StatefulWidget {
 class _DetailScreenState extends State<DetailScreen> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     Future.microtask(() {
-      context.read<RestoDetailProvider>().fetchDetail(widget.restoId);
+      context.read<RestoDetailProvider>().fetchDetail(widget.restaurantId);
     });
   }
 
@@ -30,6 +30,19 @@ class _DetailScreenState extends State<DetailScreen> {
         appBar: AppBar(
           title: Text('Detail Screen'),
         ),
+        floatingActionButton: FloatingActionButton(
+          tooltip: "Add Review",
+          onPressed: () {
+            showModalBottomSheet(
+              context: context,
+              builder: (context) {
+                return ReviewForm(restaurantId: widget.restaurantId);
+              },
+            );
+          },
+          child: const Icon(Icons.arrow_back),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
         body: Consumer<RestoDetailProvider>(
           builder: (context, value, child) {
             return switch (value.resultState) {

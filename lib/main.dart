@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:resto_dicodingsubs/api/api-service.dart';
 import 'package:resto_dicodingsubs/provider/detail/resto-detail-provider.dart';
+import 'package:resto_dicodingsubs/provider/detail/resto-review-provider.dart';
 import 'package:resto_dicodingsubs/provider/home/resto-list-provider.dart';
 import 'package:resto_dicodingsubs/provider/style/theme-provider.dart';
 import 'package:resto_dicodingsubs/screen/detail/detail-screen.dart';
@@ -16,6 +17,8 @@ void main() {
       Provider(create: (context) => ApiService()),
       ChangeNotifierProvider(create: (context) => ThemeProvider()),
       ChangeNotifierProvider(
+          create: (context) => RestoReviewProvider(context.read<ApiService>())),
+      ChangeNotifierProvider(
           create: (context) => RestoDetailProvider(context.read<ApiService>())),
       ChangeNotifierProvider(
           create: (context) => RestoListProvider(context.read<ApiService>())),
@@ -29,12 +32,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final brightness = View.of(context).platformDispatcher.platformBrightness;
 
-    // Retrieves the default theme for the platform
-    //TextTheme textTheme = Theme.of(context).textTheme;
-
-    // Use with Google Fonts package to use downloadable fonts
     TextTheme textTheme = createTextTheme(context, "Poppins", "Montserrat");
 
     MaterialTheme theme = MaterialTheme(textTheme);
@@ -49,7 +47,8 @@ class MyApp extends StatelessWidget {
           routes: {
             NavigationRoute.mainRoute.name: (context) => const HomeScreen(),
             NavigationRoute.detailRoute.name: (context) => DetailScreen(
-                  restoId: ModalRoute.of(context)?.settings.arguments as String,
+                  restaurantId:
+                      ModalRoute.of(context)?.settings.arguments as String,
                 ),
           },
         );

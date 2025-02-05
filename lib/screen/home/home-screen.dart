@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:resto_dicodingsubs/provider/home/resto-list-provider.dart';
 import 'package:resto_dicodingsubs/screen/home/resto-card-widget.dart';
-import 'package:resto_dicodingsubs/screen/home/shimmer-list.dart';
 
 import '../../provider/style/theme-provider.dart';
 import '../../static/navigation-route.dart';
@@ -36,21 +35,25 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
         actions: [
-          IconButton(
-            icon: Icon(Icons.brightness_6),
-            onPressed: () {
-              context.read<ThemeProvider>().toggleTheme();
+          Consumer<ThemeProvider>(
+            builder: (context, themeProvider, child) {
+              return IconButton(
+                icon: Icon(
+                  themeProvider.themeMode == ThemeMode.light
+                      ? Icons.dark_mode
+                      : Icons.light_mode,
+                ),
+                onPressed: themeProvider.toggleTheme,
+              );
             },
-          ),
+          )
         ],
       ),
       body: Consumer<RestoListProvider>(builder: (context, value, child) {
         return switch (value.resultState) {
-          RestoListResultLoading() => ListView.builder(
-              itemCount: 10,
-              itemBuilder: (context, index) {
-                return ShimmerList();
-              }),
+          RestoListResultLoading() => const Center(
+              child: CircularProgressIndicator(),
+            ),
           RestoListResultLoaded(data: var restoList) => ListView.builder(
               itemCount: restoList.length,
               itemBuilder: (context, index) {

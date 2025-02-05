@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:resto_dicodingsubs/model/restaurant.dart';
-import 'package:shimmer/shimmer.dart';
 
 import '../../api/api-service.dart';
+import '../../model/resto-review.dart';
+import '../../provider/detail/resto-review-provider.dart';
+import '../../static/resto-review-result-state.dart';
 
 class DetailScreenWidget extends StatelessWidget {
   final Restaurant restaurant;
@@ -16,75 +19,17 @@ class DetailScreenWidget extends StatelessWidget {
         future: apiService.getImageUrl(restaurant.pictureId, ImageSize.large),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return _buildShimmerDetail(context);
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
           } else if (snapshot.hasData) {
             return _buildDetail(context, snapshot.data as String);
           } else {
-            return _buildErrorDetail(context);
+            return const Center(
+              child: Text('Failed to load image'),
+            );
           }
         });
-  }
-
-  Widget _buildShimmerDetail(BuildContext context) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.vertical,
-      child: Shimmer.fromColors(
-        baseColor: Colors.grey[300]!,
-        highlightColor: Colors.grey[100]!,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              width: double.infinity,
-              height: 280,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(8),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                      width: double.infinity, height: 40, color: Colors.white),
-                  const SizedBox(height: 8),
-                  Container(width: 200, height: 20, color: Colors.white),
-                  const SizedBox(height: 12),
-                  Container(
-                      width: double.infinity, height: 40, color: Colors.white),
-                  const SizedBox(height: 8),
-                  const Divider(),
-                  const SizedBox(height: 8),
-                  Container(
-                      width: double.infinity, height: 200, color: Colors.white),
-                  const SizedBox(height: 8),
-                  const Divider(),
-                  const SizedBox(height: 8),
-                  Container(width: 100, height: 40, color: Colors.white),
-                  const SizedBox(height: 8),
-                  Container(
-                      width: double.infinity, height: 80, color: Colors.white),
-                  const SizedBox(height: 8),
-                  const Divider(),
-                  const SizedBox(height: 8),
-                  Container(width: 100, height: 40, color: Colors.white),
-                  const SizedBox(height: 8),
-                  Container(
-                      width: double.infinity, height: 80, color: Colors.white),
-                  const SizedBox(height: 8),
-                  const Divider(),
-                  const SizedBox(height: 8),
-                  Container(
-                      width: double.infinity, height: 80, color: Colors.white),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
   }
 
   Widget _buildDetail(BuildContext context, String imageUrl) {
@@ -218,48 +163,22 @@ class DetailScreenWidget extends StatelessWidget {
                   style: Theme.of(context).textTheme.headlineSmall,
                 ),
                 const SizedBox(height: 8),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: restaurant.customerReviews!
-                        .map((review) => Padding(
-                              padding: const EdgeInsets.only(right: 8),
-                              child: ConstrainedBox(
-                                constraints: const BoxConstraints(
-                                  minWidth: 280,
-                                  maxWidth: 280,
-                                ),
-                                child: Card(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.max,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(review.name),
-                                            Text(review.date),
-                                          ],
-                                        ),
-                                        const SizedBox(height: 8),
-                                        Text(
-                                          review.review,
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                        const SizedBox(height: 8),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ))
-                        .toList(),
-                  ),
+                Consumer<RestoReviewProvider>(
+                  builder: (context, reviewProvider, child) {
+                    return switch (reviewProvider.resultState) {
+                      RestoReviewResultLoading() => const Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                      RestoReviewResultNone() =>
+                        _buildReview(context, restaurant.customerReviews ?? []),
+                      RestoReviewResultLoaded(data: var reviews) =>
+                        _buildReview(context, reviews),
+                      RestoReviewResultError(error: var message) => Center(
+                          child: Text(message),
+                        ),
+                      _ => const SizedBox()
+                    };
+                  },
                 )
               ],
             ),
@@ -269,9 +188,47 @@ class DetailScreenWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildErrorDetail(BuildContext context) {
-    return Center(
-      child: Text('Error'),
+  Widget _buildReview(BuildContext context, List<CustomerReview> reviews) {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: reviews
+            .map((review) => Padding(
+                  padding: const EdgeInsets.only(right: 8),
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(
+                      minWidth: 280,
+                      maxWidth: 280,
+                    ),
+                    child: Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.max,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(review.name),
+                                Text(review.date),
+                              ],
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              review.review,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            const SizedBox(height: 8),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ))
+            .toList(),
+      ),
     );
   }
 }
