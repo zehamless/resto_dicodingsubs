@@ -4,9 +4,11 @@ import 'package:resto_dicodingsubs/api/api-service.dart';
 import 'package:resto_dicodingsubs/provider/detail/resto-detail-provider.dart';
 import 'package:resto_dicodingsubs/provider/detail/resto-review-provider.dart';
 import 'package:resto_dicodingsubs/provider/home/resto-list-provider.dart';
+import 'package:resto_dicodingsubs/provider/searchlist/resto-search-list-provider.dart';
 import 'package:resto_dicodingsubs/provider/style/theme-provider.dart';
 import 'package:resto_dicodingsubs/screen/detail/detail-screen.dart';
 import 'package:resto_dicodingsubs/screen/home/home-screen.dart';
+import 'package:resto_dicodingsubs/screen/searchlist/resto-search-list-screen.dart';
 import 'package:resto_dicodingsubs/static/navigation-route.dart';
 import 'package:resto_dicodingsubs/style/theme/resto-theme.dart';
 import 'package:resto_dicodingsubs/style/typography/resto-text-typography.dart';
@@ -18,6 +20,8 @@ void main() {
       ChangeNotifierProvider(create: (context) => ThemeProvider()),
       ChangeNotifierProvider(
           create: (context) => RestoReviewProvider(context.read<ApiService>())),
+      ChangeNotifierProvider(
+          create: (context) => RestoSearchProvider(context.read<ApiService>())),
       ChangeNotifierProvider(
           create: (context) => RestoDetailProvider(context.read<ApiService>())),
       ChangeNotifierProvider(
@@ -32,7 +36,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     TextTheme textTheme = createTextTheme(context, "Poppins", "Montserrat");
 
     MaterialTheme theme = MaterialTheme(textTheme);
@@ -50,6 +53,7 @@ class MyApp extends StatelessWidget {
                   restaurantId:
                       ModalRoute.of(context)?.settings.arguments as String,
                 ),
+            NavigationRoute.searchRoute.name: (context) => const SearchScreen(),
           },
         );
       },

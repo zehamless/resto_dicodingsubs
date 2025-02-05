@@ -1,26 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:resto_dicodingsubs/provider/home/resto-list-provider.dart';
+import 'package:resto_dicodingsubs/provider/searchlist/resto-search-list-provider.dart';
 import 'package:resto_dicodingsubs/screen/home/resto-card-widget.dart';
 
 import '../../provider/style/theme-provider.dart';
 import '../../static/navigation-route.dart';
 import '../../static/resto-list-result-state.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+class SearchScreen extends StatefulWidget {
+  const SearchScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<SearchScreen> createState() => _SearchScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _SearchScreenState extends State<SearchScreen> {
+  final TextEditingController _searchController = TextEditingController();
+
+  void _onSearchPressed() {
+    final query = _searchController.text;
+    if (query.isNotEmpty) {
+      context.read<RestoSearchProvider>().fetchRestoByQuery(query);
+    }
+  }
+
   @override
-  void initState() {
-    super.initState();
-    Future.microtask(() {
-      context.read<RestoListProvider>().fetchRestoList();
-    });
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
   }
 
   @override
@@ -46,16 +53,39 @@ class _HomeScreenState extends State<HomeScreen> {
                 onPressed: themeProvider.toggleTheme,
               );
             },
-          ),
-          IconButton(
-            icon: const Icon(Icons.search),
-            onPressed: () {
-              Navigator.pushNamed(context, NavigationRoute.searchRoute.name);
-            },
-          ),
+          )
         ],
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(48.0),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _searchController,
+                    decoration: InputDecoration(
+                      hintText: 'Search restaurants...',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                        borderSide: BorderSide.none,
+                      ),
+                      filled: true,
+                      fillColor: Colors.white,
+                      prefixIcon: const Icon(Icons.search),
+                    ),
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.search),
+                  onPressed: _onSearchPressed,
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
-      body: Consumer<RestoListProvider>(builder: (context, value, child) {
+      body: Consumer<RestoSearchProvider>(builder: (context, value, child) {
         return switch (value.resultState) {
           RestoListResultLoading() => const Center(
               child: CircularProgressIndicator(),

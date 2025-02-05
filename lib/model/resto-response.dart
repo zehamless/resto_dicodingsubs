@@ -20,7 +20,7 @@ class RestoResponse {
 
   factory RestoResponse.fromJson(Map<String, dynamic> json) => RestoResponse(
         error: json["error"],
-        message: json["message"],
+        message: json["message"] ?? "No message",
         count: json["count"],
         restaurants: json["restaurants"] == null
             ? null
