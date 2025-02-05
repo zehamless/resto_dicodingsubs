@@ -56,7 +56,6 @@ class ApiService {
   Future<RestoResponse> searchRestaurants(String query) async {
     final response = await http.get(Uri.parse("$_baseUrl/search?q=$query"));
     if (response.statusCode == 200) {
-      print("response-gagal: ${response.statusCode}");
       return RestoResponse.fromJson(json.decode(response.body));
     } else {
       throw Exception('Failed to search restaurants');
