@@ -44,7 +44,7 @@ class RestoCard extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(8),
                 child: Hero(
-                  tag: restaurant.name,
+                  tag: restaurant.id,
                   child: Image.network(imageUrl, fit: BoxFit.cover),
                 ),
               ),
@@ -54,21 +54,32 @@ class RestoCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(restaurant.name,
-                      style: Theme.of(context).textTheme.titleMedium),
+                  Text(
+                    restaurant.name,
+                    style: Theme.of(context).textTheme.titleMedium,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                   const SizedBox(height: 8),
                   Row(
                     children: [
-                      const Icon(Icons.pin_drop),
+                      const Icon(
+                        Icons.pin_drop,
+                        color: Colors.redAccent,
+                      ),
                       const SizedBox(width: 4),
                       Text(restaurant.city,
-                          style: Theme.of(context).textTheme.bodyMedium),
+                          style: Theme.of(context).textTheme.bodyMedium,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1),
                     ],
                   ),
                   const SizedBox(height: 8),
                   Row(
                     children: [
-                      const Icon(Icons.star),
+                      const Icon(
+                        Icons.star,
+                        color: Colors.amber,
+                      ),
                       const SizedBox(width: 4),
                       Text(restaurant.rating.toString(),
                           style: Theme.of(context).textTheme.bodyMedium),

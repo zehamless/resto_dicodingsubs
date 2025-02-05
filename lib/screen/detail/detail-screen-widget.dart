@@ -2,38 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:resto_dicodingsubs/model/restaurant.dart';
 
-import '../../api/api-service.dart';
 import '../../model/resto-review.dart';
 import '../../provider/detail/resto-review-provider.dart';
 import '../../static/resto-review-result-state.dart';
 
 class DetailScreenWidget extends StatelessWidget {
   final Restaurant restaurant;
+  final String imageUrl;
 
-  const DetailScreenWidget({super.key, required this.restaurant});
+  const DetailScreenWidget(
+      {super.key, required this.restaurant, required this.imageUrl});
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<String>(
-      future: ApiService().getImageUrl(restaurant.pictureId, ImageSize.large),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasData) {
-          return _buildDetail(context, snapshot.data!);
-        } else {
-          return const Center(child: Text('Failed to load image'));
-        }
-      },
-    );
-  }
-
-  Widget _buildDetail(BuildContext context, String imageUrl) {
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Image.network(imageUrl),
+          Hero(
+            tag: restaurant.id,
+            child: Image.network(imageUrl),
+          ),
           Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
