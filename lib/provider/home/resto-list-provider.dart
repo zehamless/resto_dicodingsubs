@@ -19,7 +19,7 @@ class RestoListProvider extends ChangeNotifier {
       _resultState = result.error
           ? RestoListResultError(result.message)
           : RestoListResultLoaded(result.restaurants ?? []);
-    } on Exception catch (e) {
+    } on Exception {
       _resultState = RestoListResultError("Error fetching data");
     }
     notifyListeners();

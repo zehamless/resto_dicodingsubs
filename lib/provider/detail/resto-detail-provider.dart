@@ -22,7 +22,7 @@ class RestoDetailProvider extends ChangeNotifier {
           : result.restaurant != null
               ? RestoDetailResultLoaded(result.restaurant!)
               : RestoDetailResultError("Restaurant data is null");
-    } on Exception catch (e) {
+    } on Exception {
       _resultState = RestoDetailResultError("Error fetching detail");
     }
     notifyListeners();

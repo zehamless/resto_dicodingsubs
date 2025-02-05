@@ -21,7 +21,7 @@ class RestoReviewProvider extends ChangeNotifier {
           : result.customerReviews != null
               ? RestoReviewResultLoaded(result.customerReviews!)
               : RestoReviewResultError("Customer review data is null");
-    } on Exception catch (e) {
+    } on Exception {
       _resultState = RestoReviewResultError("Error posting review");
     }
     notifyListeners();
