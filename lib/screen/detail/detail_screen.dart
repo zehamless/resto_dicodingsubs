@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:resto_dicodingsubs/provider/detail/resto-detail-provider.dart';
-import 'package:resto_dicodingsubs/screen/detail/widget/review-form.dart';
-import 'package:resto_dicodingsubs/utils/theme-changer.dart';
+import 'package:resto_dicodingsubs/provider/detail/restaurant_detail_provider.dart';
+import 'package:resto_dicodingsubs/screen/detail/widget/review_form.dart';
+import 'package:resto_dicodingsubs/utils/theme_changer.dart';
 
-import '../../api/api-service.dart';
-import '../../static/resto-detail-result-state.dart';
-import 'detail-screen-widget.dart';
+import '../../api/api_service.dart';
+import '../../static/restaurant_detail_result_state.dart';
+import 'detail_screen_widget.dart';
 
 class DetailScreen extends StatefulWidget {
   final String restaurantId;

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:resto_dicodingsubs/provider/searchlist/resto-search-list-provider.dart';
-import 'package:resto_dicodingsubs/screen/home/resto-card-widget.dart';
+import 'package:resto_dicodingsubs/provider/searchlist/restaurant_search_list_provider.dart';
+import 'package:resto_dicodingsubs/screen/home/restaurant_card_widget.dart';
 
-import '../../static/navigation-route.dart';
-import '../../static/resto-list-result-state.dart';
-import '../../utils/theme-changer.dart';
+import '../../static/navigation_route.dart';
+import '../../static/restaurant_list_result_state.dart';
+import '../../utils/theme_changer.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});

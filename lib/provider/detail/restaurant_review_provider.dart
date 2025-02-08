@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:resto_dicodingsubs/api/api-service.dart';
-import 'package:resto_dicodingsubs/static/resto-review-result-state.dart';
+import 'package:resto_dicodingsubs/api/api_service.dart';
+import 'package:resto_dicodingsubs/static/restaurant_review_result_state.dart';
 
 class RestoReviewProvider extends ChangeNotifier {
   final ApiService _apiService;

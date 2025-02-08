@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:resto_dicodingsubs/provider/detail/resto-review-provider.dart';
+import 'package:resto_dicodingsubs/provider/detail/restaurant_review_provider.dart';
 
 class ReviewForm extends StatefulWidget {
   final String restaurantId;

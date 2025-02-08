@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:resto_dicodingsubs/model/restaurant.dart';
 
-import '../../model/resto-review.dart';
-import '../../provider/detail/resto-review-provider.dart';
-import '../../static/resto-review-result-state.dart';
+import '../../model/restaurant_review.dart';
+import '../../provider/detail/restaurant_review_provider.dart';
+import '../../static/restaurant_review_result_state.dart';
 
 class DetailScreenWidget extends StatelessWidget {
   final Restaurant restaurant;

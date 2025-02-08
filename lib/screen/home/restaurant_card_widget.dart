@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:resto_dicodingsubs/api/api-service.dart';
+import 'package:resto_dicodingsubs/api/api_service.dart';
 import 'package:resto_dicodingsubs/model/restaurant.dart';
 
 class RestoCard extends StatelessWidget {

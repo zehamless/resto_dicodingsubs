@@ -1,4 +1,4 @@
-import 'package:resto_dicodingsubs/model/resto-category.dart';
+import 'package:resto_dicodingsubs/model/restaurant_category.dart';
 
 class Menus {
   Menus({

@@ -1,5 +1,5 @@
 import 'package:resto_dicodingsubs/model/restaurant.dart';
-import 'package:resto_dicodingsubs/model/resto-review.dart';
+import 'package:resto_dicodingsubs/model/restaurant_review.dart';
 
 class RestoResponse {
   RestoResponse({

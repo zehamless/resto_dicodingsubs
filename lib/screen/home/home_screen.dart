@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:resto_dicodingsubs/provider/home/resto-list-provider.dart';
-import 'package:resto_dicodingsubs/screen/home/resto-card-widget.dart';
-import 'package:resto_dicodingsubs/utils/theme-changer.dart';
+import 'package:resto_dicodingsubs/provider/home/restaurant_list_provider.dart';
+import 'package:resto_dicodingsubs/screen/home/restaurant_card_widget.dart';
+import 'package:resto_dicodingsubs/utils/theme_changer.dart';
 
-import '../../static/navigation-route.dart';
-import '../../static/resto-list-result-state.dart';
+import '../../static/navigation_route.dart';
+import '../../static/restaurant_list_result_state.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -19,6 +19,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     Future.microtask(() {
+      // ignore: use_build_context_synchronously
       context.read<RestoListProvider>().fetchRestoList();
     });
   }

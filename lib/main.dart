@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:resto_dicodingsubs/api/api-service.dart';
-import 'package:resto_dicodingsubs/provider/detail/resto-detail-provider.dart';
-import 'package:resto_dicodingsubs/provider/detail/resto-review-provider.dart';
-import 'package:resto_dicodingsubs/provider/home/resto-list-provider.dart';
-import 'package:resto_dicodingsubs/provider/searchlist/resto-search-list-provider.dart';
-import 'package:resto_dicodingsubs/provider/style/theme-provider.dart';
-import 'package:resto_dicodingsubs/screen/detail/detail-screen.dart';
-import 'package:resto_dicodingsubs/screen/home/home-screen.dart';
-import 'package:resto_dicodingsubs/screen/searchlist/resto-search-list-screen.dart';
-import 'package:resto_dicodingsubs/static/navigation-route.dart';
-import 'package:resto_dicodingsubs/style/theme/resto-theme.dart';
-import 'package:resto_dicodingsubs/style/typography/resto-text-typography.dart';
+import 'package:resto_dicodingsubs/api/api_service.dart';
+import 'package:resto_dicodingsubs/provider/detail/restaurant_detail_provider.dart';
+import 'package:resto_dicodingsubs/provider/detail/restaurant_review_provider.dart';
+import 'package:resto_dicodingsubs/provider/home/restaurant_list_provider.dart';
+import 'package:resto_dicodingsubs/provider/searchlist/restaurant_search_list_provider.dart';
+import 'package:resto_dicodingsubs/provider/style/theme_provider.dart';
+import 'package:resto_dicodingsubs/screen/detail/detail_screen.dart';
+import 'package:resto_dicodingsubs/screen/home/home_screen.dart';
+import 'package:resto_dicodingsubs/screen/searchlist/restaurant_search_list_screen.dart';
+import 'package:resto_dicodingsubs/static/navigation_route.dart';
+import 'package:resto_dicodingsubs/style/theme/restaurant_theme.dart';
+import 'package:resto_dicodingsubs/style/typography/restaurant_text_typography.dart';
 
 void main() {
   runApp(MultiProvider(
@@ -43,9 +43,9 @@ class MyApp extends StatelessWidget {
       builder: (context, themeProvider, child) {
         return MaterialApp(
           title: 'Flutter Demo',
-          theme: themeProvider.themeMode == ThemeMode.light
-              ? theme.light()
-              : theme.dark(),
+          theme: theme.light(),
+          darkTheme: theme.dark(),
+          themeMode: themeProvider.themeMode,
           initialRoute: NavigationRoute.mainRoute.name,
           routes: {
             NavigationRoute.mainRoute.name: (context) => const HomeScreen(),

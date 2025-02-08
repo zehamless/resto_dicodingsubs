@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
-import '../model/resto-response.dart';
+import '../model/restaurant_response.dart';
 
 enum ImageSize { small, medium, large }
 

@@ -1,6 +1,6 @@
-import 'package:resto_dicodingsubs/model/resto-category.dart';
-import 'package:resto_dicodingsubs/model/resto-menu.dart';
-import 'package:resto_dicodingsubs/model/resto-review.dart';
+import 'package:resto_dicodingsubs/model/restaurant_category.dart';
+import 'package:resto_dicodingsubs/model/restaurant_menu.dart';
+import 'package:resto_dicodingsubs/model/restaurant_review.dart';
 
 class Restaurant {
   Restaurant({

@@ -1,4 +1,4 @@
-import '../model/resto-review.dart';
+import '../model/restaurant_review.dart';
 
 sealed class RestoReviewResultState {}
 
