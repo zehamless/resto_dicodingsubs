@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:resto_dicodingsubs/provider/searchlist/restaurant_search_list_provider.dart';
 import 'package:resto_dicodingsubs/screen/home/restaurant_card_widget.dart';
 
+import '../../api/api_service.dart';
 import '../../static/navigation_route.dart';
 import '../../static/restaurant_list_result_state.dart';
 import '../../utils/theme_changer.dart';
@@ -104,6 +105,8 @@ class _SearchScreenState extends State<SearchScreen> {
                       arguments: resto.id,
                     );
                   },
+                  imageUrl: ApiService()
+                      .getImageUrl(resto.pictureId, ImageSize.medium),
                 );
               },
             ),

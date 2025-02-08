@@ -28,7 +28,7 @@ class ApiService {
     }
   }
 
-  Future<String> getImageUrl(String pictureId, ImageSize size) async {
+  String getImageUrl(String pictureId, ImageSize size) {
     final sizeStr = size.toString().split('.').last;
     return '$_imageUrl$sizeStr/$pictureId';
   }

@@ -4,6 +4,7 @@ import 'package:resto_dicodingsubs/provider/home/restaurant_list_provider.dart';
 import 'package:resto_dicodingsubs/screen/home/restaurant_card_widget.dart';
 import 'package:resto_dicodingsubs/utils/theme_changer.dart';
 
+import '../../api/api_service.dart';
 import '../../static/navigation_route.dart';
 import '../../static/restaurant_list_result_state.dart';
 
@@ -63,6 +64,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       arguments: resto.id,
                     );
                   },
+                  imageUrl: ApiService()
+                      .getImageUrl(resto.pictureId, ImageSize.medium),
                 );
               },
             ),

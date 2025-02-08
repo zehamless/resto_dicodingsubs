@@ -18,12 +18,13 @@ class DetailScreen extends StatefulWidget {
 }
 
 class _DetailScreenState extends State<DetailScreen> {
-  late Future<String> _imageUrlFuture;
-
   @override
   void initState() {
     super.initState();
-    context.read<RestoDetailProvider>().fetchDetail(widget.restaurantId);
+    Future.microtask(() {
+      // ignore: use_build_context_synchronously
+      context.read<RestoDetailProvider>().fetchDetail(widget.restaurantId);
+    });
   }
 
   @override
@@ -54,22 +55,11 @@ class _DetailScreenState extends State<DetailScreen> {
             case RestoDetailResultLoading():
               return const Center(child: CircularProgressIndicator());
             case RestoDetailResultLoaded(data: var resto):
-              _imageUrlFuture =
+              final imageUrl =
                   ApiService().getImageUrl(resto.pictureId, ImageSize.large);
-              return FutureBuilder<String>(
-                future: _imageUrlFuture,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
-                  } else if (snapshot.hasData) {
-                    return DetailScreenWidget(
-                      restaurant: resto,
-                      imageUrl: snapshot.data!,
-                    );
-                  } else {
-                    return const Center(child: Text('Failed to load image'));
-                  }
-                },
+              return DetailScreenWidget(
+                restaurant: resto,
+                imageUrl: imageUrl,
               );
             case RestoDetailResultError(error: var message):
               return Center(child: Text(message));
