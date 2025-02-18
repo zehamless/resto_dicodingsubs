@@ -1,7 +1,7 @@
 import 'package:resto_dicodingsubs/model/restaurant_category.dart';
 
-class Menus {
-  Menus({
+class Menu {
+  Menu({
     required this.foods,
     required this.drinks,
   });
@@ -9,8 +9,8 @@ class Menus {
   final List<Category> foods;
   final List<Category> drinks;
 
-  factory Menus.fromJson(Map<String, dynamic> json) {
-    return Menus(
+  factory Menu.fromJson(Map<String, dynamic> json) {
+    return Menu(
       foods: json["foods"] == null
           ? []
           : List<Category>.from(
