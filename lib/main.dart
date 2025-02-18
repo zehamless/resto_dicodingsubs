@@ -4,10 +4,13 @@ import 'package:resto_dicodingsubs/api/api_service.dart';
 import 'package:resto_dicodingsubs/provider/detail/restaurant_detail_provider.dart';
 import 'package:resto_dicodingsubs/provider/detail/restaurant_review_provider.dart';
 import 'package:resto_dicodingsubs/provider/home/restaurant_list_provider.dart';
+import 'package:resto_dicodingsubs/provider/index_nav_provider.dart';
 import 'package:resto_dicodingsubs/provider/searchlist/restaurant_search_list_provider.dart';
 import 'package:resto_dicodingsubs/provider/style/theme_provider.dart';
 import 'package:resto_dicodingsubs/screen/detail/detail_screen.dart';
+import 'package:resto_dicodingsubs/screen/favorite/favorite_screen.dart';
 import 'package:resto_dicodingsubs/screen/home/home_screen.dart';
+import 'package:resto_dicodingsubs/screen/main.dart';
 import 'package:resto_dicodingsubs/screen/searchlist/restaurant_search_list_screen.dart';
 import 'package:resto_dicodingsubs/service/shared_preferences_service.dart';
 import 'package:resto_dicodingsubs/static/navigation_route.dart';
@@ -35,6 +38,7 @@ Future<void> main() async {
           create: (context) => RestoDetailProvider(context.read<ApiService>())),
       ChangeNotifierProvider(
           create: (context) => RestoListProvider(context.read<ApiService>())),
+      ChangeNotifierProvider(create: (context) => IndexNavProvider()),
     ],
     child: const MyApp(),
   ));
@@ -55,7 +59,7 @@ class MyApp extends StatelessWidget {
           theme: theme.light(),
           darkTheme: theme.dark(),
           themeMode: themeProvider.themeMode,
-          initialRoute: NavigationRoute.mainRoute.name,
+          home: const MainScreen(),
           routes: {
             NavigationRoute.mainRoute.name: (context) => const HomeScreen(),
             NavigationRoute.detailRoute.name: (context) => DetailScreen(
@@ -63,6 +67,8 @@ class MyApp extends StatelessWidget {
                       ModalRoute.of(context)?.settings.arguments as String,
                 ),
             NavigationRoute.searchRoute.name: (context) => const SearchScreen(),
+            NavigationRoute.favoriteRoute.name: (context) =>
+                const FavoriteScreen(),
           },
         );
       },
