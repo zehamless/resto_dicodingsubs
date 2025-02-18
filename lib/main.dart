@@ -9,15 +9,24 @@ import 'package:resto_dicodingsubs/provider/style/theme_provider.dart';
 import 'package:resto_dicodingsubs/screen/detail/detail_screen.dart';
 import 'package:resto_dicodingsubs/screen/home/home_screen.dart';
 import 'package:resto_dicodingsubs/screen/searchlist/restaurant_search_list_screen.dart';
+import 'package:resto_dicodingsubs/service/shared_preferences_service.dart';
 import 'package:resto_dicodingsubs/static/navigation_route.dart';
 import 'package:resto_dicodingsubs/style/theme/restaurant_theme.dart';
 import 'package:resto_dicodingsubs/style/typography/restaurant_text_typography.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final sharedPreferences = await SharedPreferences.getInstance();
+
   runApp(MultiProvider(
     providers: [
       Provider(create: (context) => ApiService()),
-      ChangeNotifierProvider(create: (context) => ThemeProvider()),
+      Provider(
+          create: (context) => SharedPreferencesService(sharedPreferences)),
+      ChangeNotifierProvider(
+          create: (context) =>
+              ThemeProvider(context.read<SharedPreferencesService>())),
       ChangeNotifierProvider(
           create: (context) => RestoReviewProvider(context.read<ApiService>())),
       ChangeNotifierProvider(
