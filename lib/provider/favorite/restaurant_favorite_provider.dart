@@ -1,30 +1,42 @@
 import 'package:flutter/foundation.dart';
 import 'package:resto_dicodingsubs/service/sqlite_service.dart';
+import 'package:resto_dicodingsubs/static/restaurant_list_result_state.dart';
 
 import '../../model/restaurant.dart';
 
 class RestaurantFavoriteProvider extends ChangeNotifier {
   final SqliteService _sqliteService;
-  List<Restaurant> _restaurantFavorites = [];
+  RestoListResultState _resultState = RestoListResultNone();
+  final Map<String, bool> _favoriteStatus = {}; // Cache status favorite
 
-  RestaurantFavoriteProvider(this._sqliteService) {
-    fetchRestaurantFavorites();
-  }
+  RestoListResultState get resultState => _resultState;
 
-  List<Restaurant> get restaurantFavorites => _restaurantFavorites;
+  RestaurantFavoriteProvider(this._sqliteService);
 
-  /// Mengambil daftar restoran favorit dari database
   Future<void> fetchRestaurantFavorites() async {
-    _restaurantFavorites = await _sqliteService.getRestaurants();
+    try {
+      _resultState = RestoListResultLoading();
+      notifyListeners();
+      final restaurants = await _sqliteService.getRestaurants();
+      for (var resto in restaurants) {
+        _favoriteStatus[resto.id] =
+            true; // Tandai semua yang sudah di-favoritkan
+      }
+      if (restaurants.isEmpty) {
+        _resultState = RestoListResultNone();
+      } else {
+        _resultState = RestoListResultLoaded(restaurants);
+      }
+    } catch (e) {
+      _resultState = RestoListResultError("Error fetching data");
+    }
     notifyListeners();
   }
 
-  /// Mengecek apakah restoran dengan ID tertentu adalah favorit
   bool isFavorite(String id) {
-    return _restaurantFavorites.any((restaurant) => restaurant.id == id);
+    return _favoriteStatus[id] ?? false; // Ambil dari cache lokal
   }
 
-  /// Menambahkan atau menghapus restoran dari daftar favorit
   Future<void> toggleFavorite(Restaurant restaurant) async {
     if (isFavorite(restaurant.id)) {
       await removeRestaurantFavorite(restaurant.id);
@@ -33,15 +45,15 @@ class RestaurantFavoriteProvider extends ChangeNotifier {
     }
   }
 
-  /// Menambahkan restoran ke favorit
   Future<void> addRestaurantFavorite(Restaurant restaurant) async {
+    _favoriteStatus[restaurant.id] = true; // Update cache sebelum async
+    notifyListeners();
     await _sqliteService.insertRestaurant(restaurant);
-    await fetchRestaurantFavorites();
   }
 
-  /// Menghapus restoran dari favorit
   Future<void> removeRestaurantFavorite(String id) async {
+    _favoriteStatus[id] = false; // Update cache sebelum async
+    notifyListeners();
     await _sqliteService.removeRestaurant(id);
-    await fetchRestaurantFavorites();
   }
 }
