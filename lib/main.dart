@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:resto_dicodingsubs/api/api_service.dart';
 import 'package:resto_dicodingsubs/provider/detail/restaurant_detail_provider.dart';
 import 'package:resto_dicodingsubs/provider/detail/restaurant_review_provider.dart';
+import 'package:resto_dicodingsubs/provider/favorite/restaurant_favorite_provider.dart';
 import 'package:resto_dicodingsubs/provider/home/restaurant_list_provider.dart';
 import 'package:resto_dicodingsubs/provider/index_nav_provider.dart';
 import 'package:resto_dicodingsubs/provider/searchlist/restaurant_search_list_provider.dart';
@@ -13,6 +14,7 @@ import 'package:resto_dicodingsubs/screen/home/home_screen.dart';
 import 'package:resto_dicodingsubs/screen/main.dart';
 import 'package:resto_dicodingsubs/screen/searchlist/restaurant_search_list_screen.dart';
 import 'package:resto_dicodingsubs/service/shared_preferences_service.dart';
+import 'package:resto_dicodingsubs/service/sqlite_service.dart';
 import 'package:resto_dicodingsubs/static/navigation_route.dart';
 import 'package:resto_dicodingsubs/style/theme/restaurant_theme.dart';
 import 'package:resto_dicodingsubs/style/typography/restaurant_text_typography.dart';
@@ -27,6 +29,10 @@ Future<void> main() async {
       Provider(create: (context) => ApiService()),
       Provider(
           create: (context) => SharedPreferencesService(sharedPreferences)),
+      Provider(create: (context) => SqliteService()),
+      ChangeNotifierProvider(
+          create: (context) =>
+              RestaurantFavoriteProvider(context.read<SqliteService>())),
       ChangeNotifierProvider(
           create: (context) =>
               ThemeProvider(context.read<SharedPreferencesService>())),

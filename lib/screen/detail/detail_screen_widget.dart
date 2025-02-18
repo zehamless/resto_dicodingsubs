@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:resto_dicodingsubs/model/restaurant.dart';
+import 'package:resto_dicodingsubs/utils/favorite_icon_handler.dart';
 
 import '../../model/restaurant_review.dart';
 import '../../provider/detail/restaurant_review_provider.dart';
@@ -19,9 +20,17 @@ class DetailScreenWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Hero(
-            tag: restaurant.id,
-            child: Image.network(imageUrl),
+          Stack(
+            children: [
+              Hero(
+                tag: restaurant.id,
+                child: Image.network(imageUrl),
+              ),
+              Positioned(
+                  bottom: 8,
+                  right: 8,
+                  child: FavoriteIconHandler(restaurant: restaurant)),
+            ],
           ),
           Padding(
             padding: const EdgeInsets.all(16),

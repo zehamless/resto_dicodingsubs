@@ -55,10 +55,10 @@ class Restaurant {
         "city": city,
         "address": address,
         "pictureId": pictureId,
-        "categories": categories?.map((x) => x.toJson()).toList(),
-        "menus": menus?.toJson(),
+        // "categories": categories?.map((x) => x.toJson()).toList(),
+        // "menus": menus?.toJson(),
         "rating": rating,
-        "customerReviews": customerReviews?.map((x) => x.toJson()).toList(),
+        // "customerReviews": customerReviews?.map((x) => x.toJson()).toList(),
       };
 }
 
