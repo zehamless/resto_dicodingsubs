@@ -5,8 +5,10 @@ import 'package:resto_dicodingsubs/screen/home/restaurant_card_widget.dart';
 import 'package:resto_dicodingsubs/utils/theme_changer.dart';
 
 import '../../api/api_service.dart';
+import '../../provider/notification/local_notification_provider.dart';
 import '../../static/navigation_route.dart';
 import '../../static/restaurant_list_result_state.dart';
+import '../../utils/notification_icon_handler.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -37,13 +39,29 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
         actions: [
-          ThemeChanger(),
           IconButton(
             icon: const Icon(Icons.search),
             onPressed: () {
               Navigator.pushNamed(context, NavigationRoute.searchRoute.name);
             },
           ),
+          PopupMenuButton(itemBuilder: (context) {
+            return [
+              PopupMenuItem(
+                // enabled: false,
+                child: const ThemeChanger(label: true),
+              ),
+              PopupMenuItem(child: const NotificationIcon(label: true)),
+              // PopupMenuItem(
+              //   child: ListTile(
+              //     title: const Text('Check Pending Notification Requests'),
+              //     onTap: () {
+              //       _checkPendingNotificationRequests();
+              //     },
+              //   ),
+              // ),
+            ];
+          }),
         ],
       ),
       body: Consumer<RestoListProvider>(builder: (context, value, child) {
@@ -75,6 +93,75 @@ class _HomeScreenState extends State<HomeScreen> {
           _ => const SizedBox(),
         };
       }),
+    );
+  }
+
+  Future<void> _checkPendingNotificationRequests() async {
+    // todo-03-action-02: check a pending notification
+    final localNotificationProvider = context.read<LocalNotificationProvider>();
+    await localNotificationProvider.checkPendingNotificationRequests(context);
+
+    // todo-03-action-03: show a dialog to show a pending notification
+    if (!mounted) {
+      return;
+    }
+
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // todo-03-action-04: show alert dialog with empty listview builder
+        final pendingData = context.select(
+            (LocalNotificationProvider provider) =>
+                provider.pendingNotificationRequests);
+        return AlertDialog(
+          title: Text(
+            '${pendingData.length} pending notification requests',
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+          content: SizedBox(
+            height: 300,
+            width: 300,
+            child: ListView.builder(
+              itemCount: pendingData.length,
+              shrinkWrap: true,
+              itemBuilder: (context, index) {
+                // todo-03-action-05: iterate a listtile
+                final item = pendingData[index];
+                return ListTile(
+                  title: Text(
+                    item.title ?? "",
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  subtitle: Text(
+                    item.body ?? "",
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  contentPadding: EdgeInsets.zero,
+                  trailing: IconButton(
+                    onPressed: () {
+                      localNotificationProvider
+                        ..cancelNotification(item.id)
+                        ..checkPendingNotificationRequests(context);
+                    },
+                    icon: const Icon(Icons.delete_outline),
+                  ),
+                );
+              },
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
     );
   }
 }

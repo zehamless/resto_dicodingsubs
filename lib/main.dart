@@ -6,6 +6,7 @@ import 'package:resto_dicodingsubs/provider/detail/restaurant_review_provider.da
 import 'package:resto_dicodingsubs/provider/favorite/restaurant_favorite_provider.dart';
 import 'package:resto_dicodingsubs/provider/home/restaurant_list_provider.dart';
 import 'package:resto_dicodingsubs/provider/index_nav_provider.dart';
+import 'package:resto_dicodingsubs/provider/notification/local_notification_provider.dart';
 import 'package:resto_dicodingsubs/provider/searchlist/restaurant_search_list_provider.dart';
 import 'package:resto_dicodingsubs/provider/style/theme_provider.dart';
 import 'package:resto_dicodingsubs/screen/detail/detail_screen.dart';
@@ -13,6 +14,8 @@ import 'package:resto_dicodingsubs/screen/favorite/favorite_screen.dart';
 import 'package:resto_dicodingsubs/screen/home/home_screen.dart';
 import 'package:resto_dicodingsubs/screen/main.dart';
 import 'package:resto_dicodingsubs/screen/searchlist/restaurant_search_list_screen.dart';
+import 'package:resto_dicodingsubs/service/http_service.dart';
+import 'package:resto_dicodingsubs/service/local_notification_service.dart';
 import 'package:resto_dicodingsubs/service/shared_preferences_service.dart';
 import 'package:resto_dicodingsubs/service/sqlite_service.dart';
 import 'package:resto_dicodingsubs/static/navigation_route.dart';
@@ -30,6 +33,16 @@ Future<void> main() async {
       Provider(
           create: (context) => SharedPreferencesService(sharedPreferences)),
       Provider(create: (context) => SqliteService()),
+      Provider(create: (context) => HttpService()),
+      Provider(
+          create: (context) =>
+              LocalNotificationService(context.read<HttpService>())
+                ..init()
+                ..configureLocalTimeZone()),
+      ChangeNotifierProvider(
+          create: (context) => LocalNotificationProvider(
+              context.read<LocalNotificationService>())
+            ..requestPermissions()),
       ChangeNotifierProvider(
           create: (context) =>
               RestaurantFavoriteProvider(context.read<SqliteService>())),
