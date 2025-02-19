@@ -8,7 +8,7 @@ import 'package:timezone/timezone.dart' as tz;
 import 'http_service.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-    FlutterLocalNotificationsPlugin();
+FlutterLocalNotificationsPlugin();
 
 class LocalNotificationService {
   final HttpService httpService;
@@ -157,8 +157,8 @@ class LocalNotificationService {
       now.year,
       now.month,
       now.day,
-      15,
-      12,
+      11,
+      0,
     );
     if (scheduledDate.isBefore(now)) {
       scheduledDate = scheduledDate.add(const Duration(days: 1));

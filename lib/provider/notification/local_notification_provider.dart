@@ -13,7 +13,6 @@ class LocalNotificationProvider extends ChangeNotifier {
 
   int _notificationId = 0;
   bool? _permission = false;
-
   bool? get permission => _permission;
 
   // List of pending notifications
@@ -21,7 +20,6 @@ class LocalNotificationProvider extends ChangeNotifier {
 
   // Daily notification toggle state
   bool _isDailyNotificationEnabled = false;
-
   bool get isDailyNotificationEnabled => _isDailyNotificationEnabled;
 
   Future<void> requestPermissions() async {
