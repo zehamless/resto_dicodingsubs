@@ -7,6 +7,7 @@ import 'package:resto_dicodingsubs/provider/favorite/restaurant_favorite_provide
 import 'package:resto_dicodingsubs/provider/home/restaurant_list_provider.dart';
 import 'package:resto_dicodingsubs/provider/index_nav_provider.dart';
 import 'package:resto_dicodingsubs/provider/notification/local_notification_provider.dart';
+import 'package:resto_dicodingsubs/provider/notification/payload_provider.dart';
 import 'package:resto_dicodingsubs/provider/searchlist/restaurant_search_list_provider.dart';
 import 'package:resto_dicodingsubs/provider/style/theme_provider.dart';
 import 'package:resto_dicodingsubs/screen/detail/detail_screen.dart';
@@ -27,7 +28,18 @@ import 'package:shared_preferences/shared_preferences.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final sharedPreferences = await SharedPreferences.getInstance();
+  final notificationAppLaunchDetails =
+      await flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
 
+  String route = NavigationRoute.mainRoute.name;
+  String? payload;
+
+  if (notificationAppLaunchDetails?.didNotificationLaunchApp ?? false) {
+    final notificationResponse =
+        notificationAppLaunchDetails!.notificationResponse;
+    route = NavigationRoute.detailRoute.name;
+    payload = notificationResponse?.payload;
+  }
   runApp(MultiProvider(
     providers: [
       Provider(create: (context) => ApiService()),
@@ -35,6 +47,9 @@ Future<void> main() async {
           create: (context) => SharedPreferencesService(sharedPreferences)),
       Provider(create: (context) => SqliteService()),
       Provider(create: (context) => HttpService()),
+      ChangeNotifierProvider(
+        create: (context) => PayloadProvider(payload: payload),
+      ),
       Provider(
           create: (context) =>
               LocalNotificationService(context.read<HttpService>())

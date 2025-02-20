@@ -32,7 +32,7 @@ void callbackDispatcher() {
             // Use restaurant ID as notification ID
             title: "Check Out This Restaurant!",
             body: "How about trying ${randomRestaurant.name}?",
-            payload: 'restaurant_${randomRestaurant.id}',
+            payload: randomRestaurant.id,
             // Optional payload
             image: randomRestaurant.pictureId);
 

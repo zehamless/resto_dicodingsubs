@@ -6,10 +6,17 @@ import 'package:resto_dicodingsubs/api/api_service.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
+import '../model/received-notification.dart';
 import 'http_service.dart';
 
+final StreamController<ReceivedNotification> didReceiveLocalNotificationStream =
+    StreamController<ReceivedNotification>.broadcast();
+
+final StreamController<String?> selectNotificationStream =
+    StreamController<String?>.broadcast();
+
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-    FlutterLocalNotificationsPlugin();
+FlutterLocalNotificationsPlugin();
 
 class LocalNotificationService {
   final HttpService httpService;
@@ -17,9 +24,9 @@ class LocalNotificationService {
   LocalNotificationService(this.httpService);
 
   Future<void> init() async {
-    // Inisialisasi hanya untuk Android
-    const initializationSettingsAndroid =
-        AndroidInitializationSettings('app_icon');
+    const initializationSettingsAndroid = AndroidInitializationSettings(
+      'app_icon',
+    );
     final initializationSettings = InitializationSettings(
       android: initializationSettingsAndroid,
     );
@@ -28,7 +35,7 @@ class LocalNotificationService {
       onDidReceiveNotificationResponse: (notificationResponse) {
         final payload = notificationResponse.payload;
         if (payload != null && payload.isNotEmpty) {
-          // Tambahkan logika penanganan payload jika diperlukan
+          selectNotificationStream.add(payload);
         }
       },
     );

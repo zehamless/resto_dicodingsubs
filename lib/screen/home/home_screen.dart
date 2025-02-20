@@ -5,7 +5,10 @@ import 'package:resto_dicodingsubs/screen/home/restaurant_card_widget.dart';
 import 'package:resto_dicodingsubs/utils/theme_changer.dart';
 
 import '../../api/api_service.dart';
+import '../../model/received-notification.dart';
 import '../../provider/notification/local_notification_provider.dart';
+import '../../provider/notification/payload_provider.dart';
+import '../../service/local_notification_service.dart';
 import '../../service/workmanager_service.dart';
 import '../../static/navigation_route.dart';
 import '../../static/restaurant_list_result_state.dart';
@@ -19,13 +22,40 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  void _configureSelectNotificationSubject() {
+    selectNotificationStream.stream.listen((String? payload) {
+      context.read<PayloadProvider>().payload = payload;
+      Navigator.pushNamed(context, NavigationRoute.detailRoute.name,
+          arguments: payload);
+    });
+  }
+
+  void _configureDidReceiveLocalNotificationSubject() {
+    didReceiveLocalNotificationStream.stream
+        .listen((ReceivedNotification receivedNotification) {
+      final payload = receivedNotification.payload;
+      context.read<PayloadProvider>().payload = payload;
+      Navigator.pushNamed(context, NavigationRoute.detailRoute.name,
+          arguments: receivedNotification.payload);
+    });
+  }
+
   @override
   void initState() {
     super.initState();
+    _configureSelectNotificationSubject();
+    _configureDidReceiveLocalNotificationSubject();
     Future.microtask(() {
       // ignore: use_build_context_synchronously
       context.read<RestoListProvider>().fetchRestoList();
     });
+  }
+
+  @override
+  void dispose() {
+    selectNotificationStream.close();
+    didReceiveLocalNotificationStream.close();
+    super.dispose();
   }
 
   @override
