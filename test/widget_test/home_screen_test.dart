@@ -8,7 +8,6 @@ import 'package:resto_dicodingsubs/provider/home/restaurant_list_provider.dart';
 import 'package:resto_dicodingsubs/screen/home/home_screen.dart';
 import 'package:resto_dicodingsubs/static/restaurant_list_result_state.dart';
 
-// Fake provider untuk RestoListProvider
 class FakeRestoListProvider extends ChangeNotifier
     implements RestoListProvider {
   RestoListResultState _resultState = RestoListResultNone();
@@ -16,18 +15,15 @@ class FakeRestoListProvider extends ChangeNotifier
   @override
   RestoListResultState get resultState => _resultState;
 
-  // Metode untuk mengubah state secara manual dalam test
   void setResultState(RestoListResultState state) {
     _resultState = state;
     notifyListeners();
   }
 
-  // Tidak perlu implementasi fetchRestoList dalam fake
   @override
   Future<void> fetchRestoList() async {}
 }
 
-// Implementasi sederhana untuk ThemeProvider (sesuaikan dengan implementasimu)
 class FakeThemeProvider extends ChangeNotifier {
   ThemeMode themeMode = ThemeMode.light;
 
@@ -46,7 +42,6 @@ void main() {
     setUp(() {
       fakeRestoListProvider = FakeRestoListProvider();
       fakeThemeProvider = FakeThemeProvider();
-      // Buat widget test dengan MultiProvider agar HomeScreen mendapatkan semua provider yang dibutuhkan.
       widgetUnderTest = MaterialApp(
         home: MultiProvider(
           providers: [
@@ -92,7 +87,6 @@ void main() {
     testWidgets(
         'Menampilkan daftar restoran ketika state adalah RestoListResultLoaded',
         (tester) async {
-      // Siapkan data dummy restoran
       final restaurant = Restaurant(
         id: '1',
         name: 'Test Restaurant',
@@ -111,7 +105,6 @@ void main() {
         await tester.pumpWidget(widgetUnderTest);
         await tester.pumpAndSettle();
 
-        // Verify your expected widget appears
         expect(find.text('Test Restaurant'), findsOneWidget);
       });
     });
