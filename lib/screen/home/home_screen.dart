@@ -58,6 +58,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         actions: [
           IconButton(
+            key: const Key('searchButton'),
             icon: const Icon(Icons.search),
             onPressed: () {
               Navigator.pushNamed(context, NavigationRoute.searchRoute.name);
@@ -100,7 +101,9 @@ class _HomeScreenState extends State<HomeScreen> {
           RestoListResultError(error: var message) => Center(
               child: Text(message),
             ),
-          _ => const SizedBox(),
+          _ => const SizedBox(
+              key: Key('defaultState'),
+            ),
         };
       }),
     );
