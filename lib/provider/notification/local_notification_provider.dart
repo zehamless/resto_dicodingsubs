@@ -1,35 +1,38 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:resto_dicodingsubs/service/workmanager_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../service/local_notification_service.dart';
 
 class LocalNotificationProvider extends ChangeNotifier {
-  final LocalNotificationService flutterNotificationService;
+  final LocalNotificationService _notificationService;
+  final SharedPreferences _sharedPreferences;
+  final WorkmanagerService _workmanagerService;
 
-  LocalNotificationProvider(this.flutterNotificationService) {
+  LocalNotificationProvider(this._notificationService, this._sharedPreferences,
+      this._workmanagerService) {
     loadDailyNotificationPreference();
   }
 
   int _notificationId = 0;
   bool? _permission = false;
+
   bool? get permission => _permission;
 
-  // List of pending notifications
   List<PendingNotificationRequest> pendingNotificationRequests = [];
-
-  // Daily notification toggle state
   bool _isDailyNotificationEnabled = false;
+
   bool get isDailyNotificationEnabled => _isDailyNotificationEnabled;
 
   Future<void> requestPermissions() async {
-    _permission = await flutterNotificationService.requestPermissions();
+    _permission = await _notificationService.requestPermissions();
     notifyListeners();
   }
 
   void showNotification() {
-    _notificationId += 1;
-    flutterNotificationService.showNotification(
+    _notificationId++;
+    _notificationService.showNotification(
       id: _notificationId,
       title: "New Notification",
       body: "This is a new notification with id $_notificationId",
@@ -37,55 +40,51 @@ class LocalNotificationProvider extends ChangeNotifier {
     );
   }
 
-  void showBigPictureNotification() {
-    _notificationId += 1;
-    flutterNotificationService.showBigPictureNotification(
-      id: _notificationId,
-      title: "New Big Picture Notification",
-      body: "This is a new big picture notification with id $_notificationId",
-      payload: "Payload for big picture notification id $_notificationId",
-    );
-  }
+  //
+  // void showBigPictureNotification() {
+  //   _notificationId++;
+  //   _notificationService.showBigPictureNotification(
+  //     id: _notificationId,
+  //     title: "New Big Picture Notification",
+  //     body: "This is a new big picture notification with id $_notificationId",
+  //     payload: "Payload for big picture notification id $_notificationId",
+  //   );
+  // }
 
-  // Use a fixed ID for the daily notification so it can be toggled easily.
   static const int dailyNotificationId = 999;
 
   void scheduleDaily11AMNotification() {
-    flutterNotificationService.scheduleDaily11AMNotification(
-      id: dailyNotificationId,
-    );
+    _notificationService.scheduleDaily11AMNotification(id: dailyNotificationId);
   }
 
-  /// Toggles the daily notification.
   Future<void> toggleDailyNotification() async {
-    final prefs = await SharedPreferences.getInstance();
     _isDailyNotificationEnabled = !_isDailyNotificationEnabled;
-    await prefs.setBool(
+    await _sharedPreferences.setBool(
         'dailyNotificationEnabled', _isDailyNotificationEnabled);
     notifyListeners();
 
     if (_isDailyNotificationEnabled) {
       scheduleDaily11AMNotification();
+      _workmanagerService.runPeriodicTask();
     } else {
-      await flutterNotificationService.cancelNotification(dailyNotificationId);
+      await _notificationService.cancelNotification(dailyNotificationId);
+      await _workmanagerService.cancelAllTask();
     }
   }
 
-  /// Loads the daily notification state from SharedPreferences.
   Future<void> loadDailyNotificationPreference() async {
-    final prefs = await SharedPreferences.getInstance();
     _isDailyNotificationEnabled =
-        prefs.getBool('dailyNotificationEnabled') ?? false;
+        _sharedPreferences.getBool('dailyNotificationEnabled') ?? false;
     notifyListeners();
   }
 
   Future<void> checkPendingNotificationRequests(BuildContext context) async {
     pendingNotificationRequests =
-        await flutterNotificationService.pendingNotificationRequests();
+        await _notificationService.pendingNotificationRequests();
     notifyListeners();
   }
 
   Future<void> cancelNotification(int id) async {
-    await flutterNotificationService.cancelNotification(id);
+    await _notificationService.cancelNotification(id);
   }
 }

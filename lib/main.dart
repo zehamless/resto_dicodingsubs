@@ -18,6 +18,7 @@ import 'package:resto_dicodingsubs/service/http_service.dart';
 import 'package:resto_dicodingsubs/service/local_notification_service.dart';
 import 'package:resto_dicodingsubs/service/shared_preferences_service.dart';
 import 'package:resto_dicodingsubs/service/sqlite_service.dart';
+import 'package:resto_dicodingsubs/service/workmanager_service.dart';
 import 'package:resto_dicodingsubs/static/navigation_route.dart';
 import 'package:resto_dicodingsubs/style/theme/restaurant_theme.dart';
 import 'package:resto_dicodingsubs/style/typography/restaurant_text_typography.dart';
@@ -39,9 +40,12 @@ Future<void> main() async {
               LocalNotificationService(context.read<HttpService>())
                 ..init()
                 ..configureLocalTimeZone()),
+      Provider(create: (context) => WorkmanagerService()..init()),
       ChangeNotifierProvider(
           create: (context) => LocalNotificationProvider(
-              context.read<LocalNotificationService>())
+              context.read<LocalNotificationService>(),
+              sharedPreferences,
+              context.read<WorkmanagerService>())
             ..requestPermissions()),
       ChangeNotifierProvider(
           create: (context) =>

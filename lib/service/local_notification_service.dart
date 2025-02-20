@@ -2,13 +2,14 @@ import 'dart:async';
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
+import 'package:resto_dicodingsubs/api/api_service.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
 import 'http_service.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-FlutterLocalNotificationsPlugin();
+    FlutterLocalNotificationsPlugin();
 
 class LocalNotificationService {
   final HttpService httpService;
@@ -82,7 +83,7 @@ class LocalNotificationService {
       channelName,
       importance: Importance.max,
       priority: Priority.high,
-      sound: const RawResourceAndroidNotificationSound('slow_spring_board'),
+      // sound: const RawResourceAndroidNotificationSound('slow_spring_board'),
     );
     final notificationDetails = NotificationDetails(
       android: androidPlatformChannelSpecifics,
@@ -101,26 +102,30 @@ class LocalNotificationService {
     required String title,
     required String body,
     required String payload,
+    required String image,
     String channelId = "2",
     String channelName = "Big Picture Notification",
   }) async {
+    // final String largeIconPath = await httpService.downloadAndSaveFile(
+    //   'https://dummyimage.com/48x48',
+    //   'largeIcon',
+    // );
     final String largeIconPath = await httpService.downloadAndSaveFile(
-      'https://dummyimage.com/48x48',
-      'largeIcon',
-    );
+        ApiService().getImageUrl(image, ImageSize.small), id.toString());
 
+    // final String bigPicturePath = await httpService.downloadAndSaveFile(
+    //   'https://dummyimage.com/600x200',
+    //   'bigPicture.jpg',
+    // );
     final String bigPicturePath = await httpService.downloadAndSaveFile(
-      'https://dummyimage.com/600x200',
-      'bigPicture.jpg',
-    );
-
+        ApiService().getImageUrl(image, ImageSize.medium), id.toString());
     final BigPictureStyleInformation bigPictureStyleInformation =
         BigPictureStyleInformation(
       FilePathAndroidBitmap(bigPicturePath),
       hideExpandedLargeIcon: true,
-      contentTitle: 'overridden <b>big</b> content title',
+      contentTitle: title.toString(),
       htmlFormatContentTitle: true,
-      summaryText: 'summary <i>text</i>',
+      summaryText: body.toString(),
       htmlFormatSummaryText: true,
     );
 

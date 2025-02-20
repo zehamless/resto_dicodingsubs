@@ -6,6 +6,7 @@ import 'package:resto_dicodingsubs/utils/theme_changer.dart';
 
 import '../../api/api_service.dart';
 import '../../provider/notification/local_notification_provider.dart';
+import '../../service/workmanager_service.dart';
 import '../../static/navigation_route.dart';
 import '../../static/restaurant_list_result_state.dart';
 import '../../utils/notification_icon_handler.dart';
@@ -52,14 +53,22 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: const ThemeChanger(label: true),
               ),
               PopupMenuItem(child: const NotificationIcon(label: true)),
-              // PopupMenuItem(
-              //   child: ListTile(
-              //     title: const Text('Check Pending Notification Requests'),
-              //     onTap: () {
-              //       _checkPendingNotificationRequests();
-              //     },
-              //   ),
-              // ),
+              PopupMenuItem(
+                child: ListTile(
+                  title: const Text('Check Pending Notification Requests'),
+                  onTap: () {
+                    _checkPendingNotificationRequests();
+                  },
+                ),
+              ),
+              PopupMenuItem(
+                child: ListTile(
+                  title: const Text('Run Background One Off Task'),
+                  onTap: () {
+                    _runBackgroundOneOffTask();
+                  },
+                ),
+              ),
             ];
           }),
         ],
@@ -94,6 +103,11 @@ class _HomeScreenState extends State<HomeScreen> {
         };
       }),
     );
+  }
+
+  void _runBackgroundOneOffTask() async {
+    // todo-02-action-01: run the runOneOffTask function
+    context.read<WorkmanagerService>().runOneOffTask();
   }
 
   Future<void> _checkPendingNotificationRequests() async {
