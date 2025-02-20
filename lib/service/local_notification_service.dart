@@ -6,11 +6,7 @@ import 'package:resto_dicodingsubs/api/api_service.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
-import '../model/received-notification.dart';
 import 'http_service.dart';
-
-final StreamController<ReceivedNotification> didReceiveLocalNotificationStream =
-    StreamController<ReceivedNotification>.broadcast();
 
 final StreamController<String?> selectNotificationStream =
     StreamController<String?>.broadcast();
@@ -66,7 +62,6 @@ class LocalNotificationService {
   }
 
   Future<bool?> requestPermissions() async {
-    // Hanya untuk Android
     final notificationEnabled = await _isAndroidPermissionGranted();
     final requestAlarmEnabled = await _requestExactAlarmsPermission();
     if (!notificationEnabled) {
@@ -90,7 +85,6 @@ class LocalNotificationService {
       channelName,
       importance: Importance.max,
       priority: Priority.high,
-      // sound: const RawResourceAndroidNotificationSound('slow_spring_board'),
     );
     final notificationDetails = NotificationDetails(
       android: androidPlatformChannelSpecifics,
@@ -113,17 +107,8 @@ class LocalNotificationService {
     String channelId = "2",
     String channelName = "Big Picture Notification",
   }) async {
-    // final String largeIconPath = await httpService.downloadAndSaveFile(
-    //   'https://dummyimage.com/48x48',
-    //   'largeIcon',
-    // );
     final String largeIconPath = await httpService.downloadAndSaveFile(
         ApiService().getImageUrl(image, ImageSize.small), id.toString());
-
-    // final String bigPicturePath = await httpService.downloadAndSaveFile(
-    //   'https://dummyimage.com/600x200',
-    //   'bigPicture.jpg',
-    // );
     final String bigPicturePath = await httpService.downloadAndSaveFile(
         ApiService().getImageUrl(image, ImageSize.medium), id.toString());
     final BigPictureStyleInformation bigPictureStyleInformation =

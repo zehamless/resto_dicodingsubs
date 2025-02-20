@@ -31,13 +31,11 @@ Future<void> main() async {
   final notificationAppLaunchDetails =
       await flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
 
-  String route = NavigationRoute.mainRoute.name;
   String? payload;
 
   if (notificationAppLaunchDetails?.didNotificationLaunchApp ?? false) {
     final notificationResponse =
         notificationAppLaunchDetails!.notificationResponse;
-    route = NavigationRoute.detailRoute.name;
     payload = notificationResponse?.payload;
   }
   runApp(MultiProvider(

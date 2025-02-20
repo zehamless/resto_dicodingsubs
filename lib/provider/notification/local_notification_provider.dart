@@ -15,7 +15,6 @@ class LocalNotificationProvider extends ChangeNotifier {
     loadDailyNotificationPreference();
   }
 
-  int _notificationId = 0;
   bool? _permission = false;
 
   bool? get permission => _permission;
@@ -29,27 +28,6 @@ class LocalNotificationProvider extends ChangeNotifier {
     _permission = await _notificationService.requestPermissions();
     notifyListeners();
   }
-
-  void showNotification() {
-    _notificationId++;
-    _notificationService.showNotification(
-      id: _notificationId,
-      title: "New Notification",
-      body: "This is a new notification with id $_notificationId",
-      payload: "Payload for notification id $_notificationId",
-    );
-  }
-
-  //
-  // void showBigPictureNotification() {
-  //   _notificationId++;
-  //   _notificationService.showBigPictureNotification(
-  //     id: _notificationId,
-  //     title: "New Big Picture Notification",
-  //     body: "This is a new big picture notification with id $_notificationId",
-  //     payload: "Payload for big picture notification id $_notificationId",
-  //   );
-  // }
 
   static const int dailyNotificationId = 999;
 
@@ -75,12 +53,6 @@ class LocalNotificationProvider extends ChangeNotifier {
   Future<void> loadDailyNotificationPreference() async {
     _isDailyNotificationEnabled =
         _sharedPreferences.getBool('dailyNotificationEnabled') ?? false;
-    notifyListeners();
-  }
-
-  Future<void> checkPendingNotificationRequests(BuildContext context) async {
-    pendingNotificationRequests =
-        await _notificationService.pendingNotificationRequests();
     notifyListeners();
   }
 

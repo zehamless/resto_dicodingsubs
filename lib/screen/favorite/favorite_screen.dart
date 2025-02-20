@@ -20,6 +20,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
   void initState() {
     super.initState();
     Future.microtask(() {
+      // ignore: use_build_context_synchronously
       context.read<RestaurantFavoriteProvider>().fetchRestaurantFavorites();
     });
   }
