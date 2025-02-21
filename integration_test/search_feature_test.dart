@@ -6,8 +6,7 @@ import 'package:resto_dicodingsubs/main.dart' as app;
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets("integrate all feature", (tester) async {
-    // Call the app's main() to ensure the MultiProvider (and ThemeProvider) is set up
+  testWidgets("Uji fitur pencarian", (tester) async {
     app.main();
     await tester.pumpAndSettle();
 
