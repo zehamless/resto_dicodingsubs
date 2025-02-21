@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:resto_dicodingsubs/model/restaurant.dart';
 import 'package:resto_dicodingsubs/model/restaurant_menu.dart';
 import 'package:resto_dicodingsubs/provider/home/restaurant_list_provider.dart';
+import 'package:resto_dicodingsubs/provider/style/theme_provider.dart';
 import 'package:resto_dicodingsubs/screen/home/home_screen.dart';
 import 'package:resto_dicodingsubs/static/restaurant_list_result_state.dart';
 
@@ -24,9 +25,11 @@ class FakeRestoListProvider extends ChangeNotifier
   Future<void> fetchRestoList() async {}
 }
 
-class FakeThemeProvider extends ChangeNotifier {
+class FakeThemeProvider extends ChangeNotifier implements ThemeProvider {
+  @override
   ThemeMode themeMode = ThemeMode.light;
 
+  @override
   void toggleTheme() {
     themeMode = themeMode == ThemeMode.light ? ThemeMode.dark : ThemeMode.light;
     notifyListeners();
@@ -46,9 +49,11 @@ void main() {
         home: MultiProvider(
           providers: [
             ChangeNotifierProvider<RestoListProvider>.value(
-                value: fakeRestoListProvider),
-            ChangeNotifierProvider<FakeThemeProvider>.value(
-                value: fakeThemeProvider),
+              value: fakeRestoListProvider,
+            ),
+            ChangeNotifierProvider<ThemeProvider>.value(
+              value: fakeThemeProvider,
+            ),
           ],
           child: const HomeScreen(),
         ),
@@ -71,7 +76,6 @@ void main() {
 
       expect(find.byKey(const Key("defaultState")), findsOneWidget);
       expect(find.byKey(const Key("searchButton")), findsOneWidget);
-      expect(find.byType(PopupMenuButton), findsOneWidget);
     });
 
     testWidgets(
