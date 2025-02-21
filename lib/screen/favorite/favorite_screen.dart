@@ -63,7 +63,11 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                       context,
                       NavigationRoute.detailRoute.name,
                       arguments: resto.id,
-                    );
+                    ).then((_) {
+                      context
+                          .read<RestaurantFavoriteProvider>()
+                          .fetchRestaurantFavorites();
+                    });
                   },
                   imageUrl: ApiService()
                       .getImageUrl(resto.pictureId, ImageSize.medium),
