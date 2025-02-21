@@ -5,6 +5,7 @@ import 'package:resto_dicodingsubs/screen/detail/widget/review_form.dart';
 import 'package:resto_dicodingsubs/utils/theme_changer.dart';
 
 import '../../api/api_service.dart';
+import '../../static/navigation_route.dart';
 import '../../static/restaurant_detail_result_state.dart';
 import 'detail_screen_widget.dart';
 
@@ -31,6 +32,20 @@ class _DetailScreenState extends State<DetailScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            if (Navigator.canPop(context)) {
+              Navigator.pop(context);
+            } else {
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                NavigationRoute.mainRoute.name,
+                (Route<dynamic> route) => false,
+              );
+            }
+          },
+        ),
         title: Text('Detail Screen'),
         actions: [
           ThemeChanger(),

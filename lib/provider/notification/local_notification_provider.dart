@@ -29,12 +29,6 @@ class LocalNotificationProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  static const int dailyNotificationId = 999;
-
-  void scheduleDaily11AMNotification() {
-    _notificationService.scheduleDaily11AMNotification(id: dailyNotificationId);
-  }
-
   Future<void> toggleDailyNotification() async {
     _isDailyNotificationEnabled = !_isDailyNotificationEnabled;
     await _sharedPreferences.setBool(
@@ -42,10 +36,8 @@ class LocalNotificationProvider extends ChangeNotifier {
     notifyListeners();
 
     if (_isDailyNotificationEnabled) {
-      scheduleDaily11AMNotification();
       _workmanagerService.runPeriodicTask();
     } else {
-      await _notificationService.cancelNotification(dailyNotificationId);
       await _workmanagerService.cancelAllTask();
     }
   }
@@ -56,7 +48,4 @@ class LocalNotificationProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> cancelNotification(int id) async {
-    await _notificationService.cancelNotification(id);
-  }
 }

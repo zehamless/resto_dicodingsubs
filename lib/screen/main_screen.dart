@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:resto_dicodingsubs/provider/index_nav_provider.dart';
 import 'package:resto_dicodingsubs/screen/favorite/favorite_screen.dart';
 import 'package:resto_dicodingsubs/screen/home/home_screen.dart';
+import 'package:resto_dicodingsubs/screen/setting/setting_screen.dart';
 
 class MainScreen extends StatelessWidget {
   const MainScreen({super.key});
@@ -17,6 +18,8 @@ class MainScreen extends StatelessWidget {
               return HomeScreen();
             case 1:
               return FavoriteScreen();
+            case 2:
+              return SettingScreen();
             default:
               return HomeScreen();
           }
@@ -36,6 +39,8 @@ class MainScreen extends StatelessWidget {
             icon: Icon(Icons.favorite),
             label: 'Favorite',
           ),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.settings), label: 'Settings'),
         ],
       ),
     );

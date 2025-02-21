@@ -1,18 +1,11 @@
-import 'dart:async';
-
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:resto_dicodingsubs/api/api_service.dart';
-import 'package:timezone/data/latest_all.dart' as tz;
-import 'package:timezone/timezone.dart' as tz;
-
-import 'http_service.dart';
-
-final StreamController<String?> selectNotificationStream =
-    StreamController<String?>.broadcast();
+import 'package:resto_dicodingsubs/main.dart'; // Pastikan global navigatorKey diimpor
+import 'package:resto_dicodingsubs/service/http_service.dart';
+import 'package:resto_dicodingsubs/static/navigation_route.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-FlutterLocalNotificationsPlugin();
+    FlutterLocalNotificationsPlugin();
 
 class LocalNotificationService {
   final HttpService httpService;
@@ -20,18 +13,20 @@ class LocalNotificationService {
   LocalNotificationService(this.httpService);
 
   Future<void> init() async {
-    const initializationSettingsAndroid = AndroidInitializationSettings(
-      'app_icon',
-    );
+    const initializationSettingsAndroid =
+        AndroidInitializationSettings('app_icon');
     final initializationSettings = InitializationSettings(
       android: initializationSettingsAndroid,
     );
     await flutterLocalNotificationsPlugin.initialize(
       initializationSettings,
-      onDidReceiveNotificationResponse: (notificationResponse) {
+      onDidReceiveNotificationResponse: (notificationResponse) async {
         final payload = notificationResponse.payload;
         if (payload != null && payload.isNotEmpty) {
-          selectNotificationStream.add(payload);
+          navigatorKey.currentState?.pushNamed(
+            NavigationRoute.detailRoute.name,
+            arguments: payload,
+          );
         }
       },
     );
@@ -70,32 +65,6 @@ class LocalNotificationService {
       return requestNotificationsPermission && requestAlarmEnabled;
     }
     return notificationEnabled && requestAlarmEnabled;
-  }
-
-  Future<void> showNotification({
-    required int id,
-    required String title,
-    required String body,
-    required String payload,
-    String channelId = "1",
-    String channelName = "Simple Notification",
-  }) async {
-    final androidPlatformChannelSpecifics = AndroidNotificationDetails(
-      channelId,
-      channelName,
-      importance: Importance.max,
-      priority: Priority.high,
-    );
-    final notificationDetails = NotificationDetails(
-      android: androidPlatformChannelSpecifics,
-    );
-    await flutterLocalNotificationsPlugin.show(
-      id,
-      title,
-      body,
-      notificationDetails,
-      payload: payload,
-    );
   }
 
   Future<void> showBigPictureNotification({
@@ -139,67 +108,5 @@ class LocalNotificationService {
       notificationDetails,
       payload: payload,
     );
-  }
-
-  Future<void> configureLocalTimeZone() async {
-    tz.initializeTimeZones();
-    final String timeZoneName = await FlutterTimezone.getLocalTimezone();
-    tz.setLocalLocation(tz.getLocation(timeZoneName));
-  }
-
-  tz.TZDateTime _nextInstanceOf11AM() {
-    final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
-    tz.TZDateTime scheduledDate = tz.TZDateTime(
-      tz.local,
-      now.year,
-      now.month,
-      now.day,
-      11,
-      0,
-    );
-    if (scheduledDate.isBefore(now)) {
-      scheduledDate = scheduledDate.add(const Duration(days: 1));
-    }
-    return scheduledDate;
-  }
-
-  Future<void> scheduleDaily11AMNotification({
-    required int id,
-    String channelId = "3",
-    String channelName = "Schedule Notification",
-  }) async {
-    final androidPlatformChannelSpecifics = AndroidNotificationDetails(
-      channelId,
-      channelName,
-      importance: Importance.max,
-      priority: Priority.high,
-      ticker: 'ticker',
-    );
-
-    final notificationDetails = NotificationDetails(
-      android: androidPlatformChannelSpecifics,
-    );
-
-    final datetimeSchedule = _nextInstanceOf11AM();
-
-    await flutterLocalNotificationsPlugin.zonedSchedule(
-      id,
-      'Lunch Break',
-      'It\'s 11 AM, time to have lunch!',
-      datetimeSchedule,
-      notificationDetails,
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.absoluteTime,
-      matchDateTimeComponents: DateTimeComponents.time,
-    );
-  }
-
-  Future<List<PendingNotificationRequest>> pendingNotificationRequests() async {
-    return await flutterLocalNotificationsPlugin.pendingNotificationRequests();
-  }
-
-  Future<void> cancelNotification(int id) async {
-    await flutterLocalNotificationsPlugin.cancel(id);
   }
 }
